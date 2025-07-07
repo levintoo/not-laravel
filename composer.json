@@ -1,0 +1,25 @@
+{
+    "version": "0.0.1",
+    "name": "lou/not-laravel",
+    "description": "lou/not-laravel description",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "levintoo",
+            "email": "tooklevin@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/routing": "^12.19",
+        "illuminate/container": "^12.19",
+        "illuminate/events": "^12.19",
+        "illuminate/http": "^12.19",
+        "illuminate/view": "^12.19",
+        "illuminate/filesystem": "^12.19",
+        "illuminate/support": "^12.19"
+    }
+}
