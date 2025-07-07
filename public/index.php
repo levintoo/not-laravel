@@ -1,27 +1,27 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Routing\Router;
-use Illuminate\Http\Request;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\View\FileViewFinder;
-use Illuminate\View\Factory as ViewFactory;
-use Illuminate\View\Engines\EngineResolver;
-use Illuminate\View\Engines\CompilerEngine;
-use Illuminate\View\Engines\PhpEngine;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContract;
-use Illuminate\Routing\CallableDispatcher;
-use Illuminate\View\ViewFinderInterface;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcherContract;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
+use Illuminate\Routing\CallableDispatcher;
+use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContract;
+use Illuminate\Routing\Router;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\Engines\PhpEngine;
+use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\FileViewFinder;
+use Illuminate\View\ViewFinderInterface;
 
 // --------------------------------------------------------
 // Setup Service Container and Event Dispatcher
 // --------------------------------------------------------
-$container = new Container();
+$container = new Container;
 $events = new Dispatcher($container);
 
 // Register container for all facades
@@ -41,8 +41,9 @@ $container->bind(CallableDispatcherContract::class, CallableDispatcher::class);
 
 // Bind FileViewFinder to locate view templates
 $container->bind(ViewFinderInterface::class, function () {
-    $filesystem = new Filesystem();
-    $paths = [__DIR__ . '/../views'];
+    $filesystem = new Filesystem;
+    $paths = [__DIR__.'/../views'];
+
     return new FileViewFinder($filesystem, $paths);
 });
 
@@ -52,9 +53,9 @@ $container->bind(EventsDispatcherContract::class, function () use ($events) {
 });
 
 // Setup cache directory for compiled Blade templates
-$filesystem = new Filesystem();
-$cachePath = __DIR__ . '/../storage/views';
-if (!is_dir($cachePath)) {
+$filesystem = new Filesystem;
+$cachePath = __DIR__.'/../storage/views';
+if (! is_dir($cachePath)) {
     mkdir($cachePath, 0755, true);
 }
 
@@ -62,7 +63,7 @@ if (!is_dir($cachePath)) {
 $bladeCompiler = new BladeCompiler($filesystem, $cachePath);
 
 // Register view engines
-$engineResolver = new EngineResolver();
+$engineResolver = new EngineResolver;
 
 // Register Blade Engine
 $engineResolver->register('blade', function () use ($bladeCompiler) {
@@ -75,7 +76,7 @@ $engineResolver->register('php', function () use ($filesystem) {
 });
 
 // Safety Check: Ensure Blade engine is available
-if (!method_exists($engineResolver, 'resolve') || !$engineResolver->resolve('blade')) {
+if (! method_exists($engineResolver, 'resolve') || ! $engineResolver->resolve('blade')) {
     throw new Exception('Blade engine was not registered properly!');
 }
 
@@ -92,7 +93,7 @@ $container->instance(ViewFactory::class, $viewFactory);
 // --------------------------------------------------------
 $router = new Router($events, $container);
 
-require __DIR__ . '/../routes/web.php';
+require __DIR__.'/../routes/web.php';
 
 // --------------------------------------------------------
 // Handle Incoming Request and Send Response
